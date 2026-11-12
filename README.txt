@@ -1,0 +1,1 @@
+The SQLite database is created automatically the first time app.py runs. Keep this folder in your project.

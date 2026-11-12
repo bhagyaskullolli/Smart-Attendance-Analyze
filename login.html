@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Admin Login{% endblock %}
+{% block auth_content %}
+<div class="login-page"><div class="login-card"><div class="login-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+<h2>Smart Attendance Analyser</h2><p>Smarter Attendance. Better Insights.</p>
+{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert alert-{{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
+<form method="post"><label>Username</label><input class="form-control mb-3" name="username" required autocomplete="username" placeholder="Enter username">
+<label>Password</label><input class="form-control mb-4" type="password" name="password" required autocomplete="current-password" placeholder="Enter password">
+<button class="btn btn-primary w-100">Login <i class="fa-solid fa-arrow-right ms-1"></i></button></form>
+<div class="demo-note">Demo login: <b>admin</b> / <b>admin123</b><br>Change the password in Settings after login.</div></div></div>
+{% endblock %}

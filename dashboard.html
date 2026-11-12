@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% block title %}Dashboard · Smart Attendance{% endblock %}
+{% block content %}
+<div class="hero-banner"><div><h1>Smart Attendance <em>Analyser</em></h1><p>Smarter Attendance. Better Insights.</p></div><div class="hero-art"><i class="fa-solid fa-chart-column"></i><i class="fa-regular fa-calendar-check"></i></div></div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-users"></i></div><div><small>Total Students</small><h3>{{ total }}</h3></div></div>
+<div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div><div><small>Present Today</small><h3>{{ present }}</h3></div></div>
+<div class="stat-card"><div class="stat-icon red"><i class="fa-solid fa-xmark"></i></div><div><small>Absent Today</small><h3>{{ absent }}</h3></div></div>
+<div class="stat-card"><div class="stat-icon yellow"><i class="fa-solid fa-triangle-exclamation"></i></div><div><small>At Risk Students</small><h3>{{ risk }}</h3><small>Below 75% attendance</small></div></div>
+</div>
+<div class="dashboard-grid">
+<section class="panel"><h5><i class="fa-solid fa-chart-pie me-2"></i>Attendance Overview</h5><div class="chart-wrap doughnut-wrap"><canvas id="overviewChart"></canvas><div class="chart-center"><b>{{ overall }}%</b><small>Overall</small></div></div><div class="legend"><span><i class="dot green-dot"></i> Present</span><span><i class="dot red-dot"></i> Absent</span></div></section>
+<section class="panel"><h5><i class="fa-solid fa-chart-line me-2"></i>Monthly Attendance Trend</h5><div class="chart-wrap"><canvas id="trendChart"></canvas></div></section>
+</div>
+<section class="panel mt-3"><div class="panel-heading"><h5><i class="fa-solid fa-people-group me-2"></i>Recent Attendance Records</h5><a class="btn btn-sm btn-primary" href="{{ url_for('reports') }}">View All <i class="fa-solid fa-arrow-right"></i></a></div>
+<div class="table-responsive"><table class="table align-middle"><thead><tr><th>#</th><th>Student Name</th><th>Subject</th><th>Date</th><th>Status</th></tr></thead><tbody>
+{% for row in recent %}<tr><td>{{ loop.index }}</td><td>{{ row.student_name }}</td><td>{{ row.subject_name }}</td><td>{{ row.attendance_date }}</td><td><span class="status {{ 'present' if row.status=='Present' else 'absent' }}">{{ row.status }}</span></td></tr>
+{% else %}<tr><td colspan="5" class="text-center text-muted py-4">No attendance records yet. Start by marking attendance.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}
+{% block scripts %}<script>
+new Chart(document.getElementById('overviewChart'),{type:'doughnut',data:{labels:['Present','Absent'],datasets:[{data:[{{ overall }},{{ 100-overall }}],backgroundColor:['#20b477','#f04d5d'],borderWidth:0,hoverOffset:5}]},options:{cutout:'72%',plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:{{ labels|tojson }},datasets:[{label:'Attendance %',data:{{ values|tojson }},borderColor:'#2864dc',backgroundColor:'rgba(40,100,220,.12)',fill:true,tension:.35,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'}}},plugins:{legend:{display:false}}}});
+</script>{% endblock %}
